@@ -3,8 +3,11 @@
   Main entry point that re-exports all components
 -/
 
+-- Basic components
 import HumanMath.Natural.Basic
 import HumanMath.Natural.Add
+import HumanMath.Natural.Algebra
+import HumanMath.Algebra.Monoid
 
 /-! # Module Documentation
 
@@ -15,6 +18,7 @@ It provides human-readable mathematical operations and proofs.
 - Natural numbers with clear naming
 - Basic arithmetic operations
 - Simple and readable syntax
+- Algebraic structures with clear definitions
 
 ## Usage Example
 ```lean
@@ -28,5 +32,8 @@ def sum := Natural.add five three
 -/
 
 namespace HumanMath
+
+/- Check that our Natural forms a CommutativeMonoid -/
+example : HumanMath.Algebra.CommutativeMonoid Natural := inferInstance
 
 end HumanMath
