@@ -32,6 +32,10 @@ add Natural.zero n = n
    = Natural.next (add Natural.zero n') := by simp [add]
    _ = Natural.next n' := by rw [inductionHypothesis]
 
+theorem addZeroRightIsIdentity (n : Natural):
+add n Natural.zero = n
+:= by rw[add]
+
 theorem putNextAnywhereInAdd (n m : Natural):
 add n (Natural.next m) = add (Natural.next n) m
   := by induction m with
@@ -46,8 +50,9 @@ add n (Natural.next m) = add (Natural.next n) m
     _ = Natural.next (add (Natural.next n) m') := by rw[inductionHypothesis]
     _ = add (Natural.next n) (Natural.next m') := by simp[add]
 
-theorem addIsCommutative (n m : Natural) : add n m = add m n := by
- induction m with
+theorem addIsCommutative (n m : Natural):
+add n m = add m n
+  := by induction m with
   | zero =>
     calc add n Natural.zero
     = n := by simp[add]
@@ -59,6 +64,19 @@ theorem addIsCommutative (n m : Natural) : add n m = add m n := by
     _ = add m' (Natural.next n) := by simp[add]
     _ = add (Natural.next m') n := by rw[putNextAnywhereInAdd]
 
+theorem addIsAssociative (a b c : Natural):
+add (add a b) c = add a (add b c)
+  := by induction c with
+  | zero =>
+    calc add (add a b) Natural.zero
+    = add a b := by simp[add]
+    _ = add a (add b Natural.zero) := by simp[add]
+  | next c' inductionHypothesisC =>
+    calc add (add a b) (Natural.next c')
+    = Natural.next (add (add a b) c') := by simp[add]
+    _ = Natural.next (add a (add b c')) := by rw[inductionHypothesisC]
+    _ = add a (Natural.next (add b c')) := by simp[add]
+    _ = add a (add b (Natural.next c')) := by simp[add]
 
 
 end HumanMath.Natural
