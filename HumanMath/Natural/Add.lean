@@ -32,7 +32,7 @@ Natural.zero + n = n
    _ = Natural.next n' := by rw [inductionHypothesis]
 
 theorem addZeroRightIsIdentity (n : Natural):
-add n Natural.zero = n
+n + Natural.zero = n
 := by rw[add]
 
 theorem putNextAnywhereInAdd (n m : Natural):
