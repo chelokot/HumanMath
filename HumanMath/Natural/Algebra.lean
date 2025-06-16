@@ -1,8 +1,3 @@
-/-
-  HumanMath Library
-  Natural/Add.lean - Addition operations for natural numbers with human-readable names
--/
-
 import HumanMath.Natural.Basic
 import HumanMath.Natural.Add
 import HumanMath.Algebra.Monoid
@@ -23,56 +18,56 @@ instance : HumanMath.Algebra.CommutativeMonoid Natural where
 theorem zeroIsNotNext (a : Natural) : Natural.next a ≠ Natural.zero := by
   intro hypothesis
   cases hypothesis
-theorem nextIsPlusOne (a : Natural) : Natural.next a = add a Natural.one := by
+theorem nextIsPlusOne (a : Natural) : Natural.next a = a + Natural.one := by
   calc Natural.next a
-  = Natural.next (add a Natural.zero) := by simp[add]
-  _ = add a (Natural.next Natural.zero) := by simp[add]
-  _ = add a Natural.one := by simp[Natural.one]
+  = Natural.next (a + Natural.zero) := by simp[add]
+  _ = a + (Natural.next Natural.zero) := by simp[add]
+  _ = a + Natural.one := by simp[Natural.one]
 theorem nextInjective (a b : Natural) : Natural.next a = Natural.next b → a = b := by
   intro hypothesis
   cases hypothesis
   rfl
-theorem additionInjective (a b c : Natural) : add a c = add b c → a = b := by
+theorem additionInjective (a b c : Natural) : a + c = b + c → a = b := by
   intro premise
   induction c with
   | zero =>
     calc a
-    = add a Natural.zero := by simp[add]
-    _ = add b Natural.zero := by rw[premise]
+    = a + Natural.zero := by simp[add]
+    _ = b + Natural.zero := by rw[premise]
     _ = b := by simp[add]
   | next c' inductionHypothesis =>
-    have step1 : Natural.next (add a c') = Natural.next (add b c') := by simpa [add] using premise
-    have step2 : add a c' = add b c' := nextInjective (add a c') (add b c') step1
+    have step1 : Natural.next (add a c') = Natural.next (b + c') := by simpa [add] using premise
+    have step2 : a + c' = b + c' := nextInjective (a + c') (b + c') step1
     exact inductionHypothesis step2
 
-theorem oneDoesNotHaveLeftInverse (a : Natural) : Natural.add a Natural.one ≠ Natural.zero := by
+theorem oneDoesNotHaveLeftInverse (a : Natural) : a + Natural.one ≠ Natural.zero := by
   intro hypothesis
   cases a with
   | zero =>
     have : Natural.next Natural.zero = Natural.zero := by
       calc Natural.next Natural.zero
         = Natural.one := by rw[Natural.one]
-        _ = Natural.add Natural.one Natural.zero := by simp[add]
-        _ = Natural.add Natural.zero Natural.one := by rw[Natural.addIsCommutative]
+        _ = Natural.one + Natural.zero := by simp[add]
+        _ = Natural.zero + Natural.one := by rw[Natural.addIsCommutative]
         _ = Natural.zero := by rw[hypothesis]
     exact zeroIsNotNext Natural.zero this
   | next n =>
-    have : Natural.next (add one n) = Natural.zero := by
-      calc Natural.next (add one n)
-      _ = add one (Natural.next n) := by simp[add]
-      _ = add (Natural.next n) one := by rw[Natural.addIsCommutative]
+    have : Natural.next (one + n) = Natural.zero := by
+      calc Natural.next (one + n)
+      _ = one + (Natural.next n) := by simp[add]
+      _ = (Natural.next n) + one := by rw[Natural.addIsCommutative]
       _ = Natural.zero := by rw[hypothesis]
-    exact zeroIsNotNext (add one n) this
+    exact zeroIsNotNext (one + n) this
 
 theorem natural_not_group :
     ¬ ∃ inst : HumanMath.Algebra.Group Natural,
         inst.op      = add ∧
         inst.neutral = Natural.zero := by
-  intro h
-  rcases h with ⟨inst, hop, hneutral⟩
+  intro premise
+  rcases premise with ⟨inst, premiseOp, premiseNeural⟩
 
-  have h1 : add (inst.inverse Natural.one) Natural.one = Natural.zero := by
-    simpa [hop, hneutral] using inst.inverseLeft Natural.one
+  have h1 : (inst.inverse Natural.one) + Natural.one = Natural.zero := by
+    simpa [premiseOp, premiseNeural] using inst.inverseLeft Natural.one
 
   exact oneDoesNotHaveLeftInverse (inst.inverse Natural.one) h1
 
