@@ -15,19 +15,30 @@ instance : HumanMath.Algebra.CommutativeMonoid Natural where
   commutative  := addIsCommutative
 
 -- Not a group
-theorem zeroIsNotNext (a : Natural) : Natural.next a ≠ Natural.zero := by
+theorem zeroIsNotNext (a : Natural):
+Natural.next a ≠ Natural.zero
+  := by
   intro hypothesis
   cases hypothesis
-theorem nextIsPlusOne (a : Natural) : Natural.next a = a + Natural.one := by
+
+theorem nextIsPlusOne (a : Natural):
+Natural.next a = a + Natural.one
+  := by
   calc Natural.next a
   = Natural.next (a + Natural.zero) := by simp[add]
   _ = a + (Natural.next Natural.zero) := by simp[add]
   _ = a + Natural.one := by simp[Natural.one]
-theorem nextInjective (a b : Natural) : Natural.next a = Natural.next b → a = b := by
+
+theorem nextInjective (a b : Natural):
+Natural.next a = Natural.next b → a = b
+  := by
   intro hypothesis
   cases hypothesis
   rfl
-theorem additionInjective (a b c : Natural) : a + c = b + c → a = b := by
+
+theorem additionInjective (a b c : Natural):
+a + c = b + c → a = b
+  := by
   intro premise
   induction c with
   | zero =>
@@ -40,7 +51,9 @@ theorem additionInjective (a b c : Natural) : a + c = b + c → a = b := by
     have step2 : a + c' = b + c' := nextInjective (a + c') (b + c') step1
     exact inductionHypothesis step2
 
-theorem oneDoesNotHaveLeftInverse (a : Natural) : a + Natural.one ≠ Natural.zero := by
+theorem oneDoesNotHaveLeftInverse (a : Natural):
+a + Natural.one ≠ Natural.zero
+  := by
   intro hypothesis
   cases a with
   | zero =>
@@ -59,15 +72,16 @@ theorem oneDoesNotHaveLeftInverse (a : Natural) : a + Natural.one ≠ Natural.ze
       _ = Natural.zero := by rw[hypothesis]
     exact zeroIsNotNext (one + n) this
 
-theorem natural_not_group :
-    ¬ ∃ inst : HumanMath.Algebra.Group Natural,
-        inst.op      = add ∧
-        inst.neutral = Natural.zero := by
-  intro premise
-  rcases premise with ⟨inst, premiseOp, premiseNeural⟩
+theorem naturalNotGroup:
+¬ ∃ inst : HumanMath.Algebra.Group Natural,
+    inst.op      = add ∧
+    inst.neutral = Natural.zero
+  := by
+  intro assumption
+  rcases assumption with ⟨inst, assumptionOp, assumptionNeural⟩
 
   have h1 : (inst.inverse Natural.one) + Natural.one = Natural.zero := by
-    simpa [premiseOp, premiseNeural] using inst.inverseLeft Natural.one
+    simpa [assumptionOp, assumptionNeural] using inst.inverseLeft Natural.one
 
   exact oneDoesNotHaveLeftInverse (inst.inverse Natural.one) h1
 
